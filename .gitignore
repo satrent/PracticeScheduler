@@ -1,0 +1,9 @@
+.idea/*
+.idea/*/*
+node_modules/*
+
+.idea/PracticeScheduler.iml
+
+.idea/scopes/scope_settings.xml
+
+.idea/vcs.xml

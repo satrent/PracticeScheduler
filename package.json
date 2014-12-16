@@ -1,0 +1,22 @@
+{
+  "name": "PracticeScheduler",
+  "version": "0.0.0",
+  "description": "web app for youth sports practice scheduling",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/satrent/PracticeScheduler.git"
+  },
+  "author": "Trent Nelson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/satrent/PracticeScheduler/issues"
+  },
+  "homepage": "https://github.com/satrent/PracticeScheduler",
+  "dependencies": {
+    "express": "~4.10.6"
+  }
+}
