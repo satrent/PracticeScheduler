@@ -1,0 +1,62 @@
+body{
+  font-family: Helvetica;
+}
+h1 {
+  font-size: 18px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 16px;
+}
+.request h1 {
+  text-align: left;
+}
+.weekday {
+  width: 14%;
+  float: left;
+  min-height: 250px;
+  margin: .5px;
+  background: #eee;
+  border-radius: 8px;
+}
+.weekday h2 {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #bbb;
+}
+.entry {
+  margin: 4px;
+  background-color: #ccf;
+  font-size: 10px;
+  padding: 4px;
+}
+
+.entry.open {
+  background-color: #ffc;
+  cursor: pointer;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.row .label {
+  display: inline-block;
+  width: 70px;
+  text-align: right;
+  margin: 4px;
+}
+
+.row .value {
+  display: inline-block;
+}
+
+button {
+  min-width: 100px;
+  height: 25px;
+  background: #ddd;
+  margin-left: 20px;
+}
