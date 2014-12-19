@@ -6,9 +6,21 @@ mongoose.connect('mongodb://web:boosters@ds063870.mongolab.com:63870/practicesch
 
 var Team = mongoose.model('Team', { level: String, coach: String, gender: String });
 
-exports.getTeams = function(f) {
-  Team.find({}).exec(function(err, teams){
-    f(teams);
+exports.getTeams = function(r, f) {
+  Team.find({}, function(err, teams){
+    console.log(r);
+    if (err){
+      console.log(err);
+      f(err, null);
+      console.log(err);
+      return;
+    }
+    if (teams) {
+      console.log(null, teams);
+      f(null, teams, r);
+      return;
+    }
+    f(err, null, r);
   })
 }
 

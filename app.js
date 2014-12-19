@@ -12,14 +12,13 @@ app.use( bodyParser.json() );
 
 
 app.get('/api/teams', function (req, res) {
-  data.getTeams(function(err, teams){
+  data.getTeams(res, function(err, teams, r){
     if (err){
-      res.json(err);
+      r.json(err);
     }
-    res.json(teams);
+    r.json(teams);
   })
 })
-
 
 app.post('/api/team', function(req, res){
   data.updateTeam(req.body.team, function(result){
