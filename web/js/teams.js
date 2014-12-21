@@ -40,9 +40,11 @@ teamApp.controller('TeamController', function($scope, $http) {
     $http.post('/api/team', {team: $scope.selectedTeam})
       .success(function(data){
         console.log(data);
-        $scope.loadTeams();
+          $scope.loadTeams();
         $scope.selectedTeam = null;
       })
   }
+
+  $scope.genderValues = ['boys', 'girls'];
 
 });
