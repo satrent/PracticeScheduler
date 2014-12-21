@@ -2,9 +2,9 @@
 
 /* Controllers */
 
-var teamApp = angular.module('teamApp', []);
+var practiceApp = angular.module('practiceApp', []);
 
-teamApp.controller('TeamController', function($scope, $http) {
+practiceApp.controller('TeamController', function($scope, $http) {
 
   $scope.loadTeams = function() {
     $http.get('/api/teams')

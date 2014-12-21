@@ -14,7 +14,6 @@ var upsert = function(model, data, f){
   }
 }
 
-
 // -- Teams
 var Team = mongoose.model('Team', { level: String, coach: String, gender: String });
 

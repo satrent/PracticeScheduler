@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Practice Scheduler</title>
+  <script src="/js/angular.js"></script>
+  <script src="/js/moment.min.js"></script>
+  <script src="/js/underscore-min.js"></script>
+  <script src="/js/jquery-1.11.1.min.js"></script>
+  <script src="/js/teams.js"></script>
+  <script src="/js/fields.js"></script>
+  <script src="/js/reoccurs.js"></script>
+  <link href="/css/site.css" rel="stylesheet" type="text/css">
+</head>
+<body class="teams" ng-app="practiceApp">
+  <h1>Admin</h1>
+
+  <div class="tab-header active" data-tab="teamsTab">Teams</div>
+  <div class="tab-header" data-tab="fieldsTab">Fields</div>
+  <div class="tab-header" data-tab="reoccursTab">Reoccurs</div>
+  <div class="tab-header" data-tab="gamesTab">Games</div>
+  <div class="tab-header" data-tab="closuresTab">Closures</div>
+
+  <div id="teamsTab" class="tab active" ng-controller="TeamController">
+
+    <table>
+      <tr>
+        <th>
+          Coach
+        </th>
+        <th>
+          Level
+        </th>
+        <th>
+          Gender
+        </th>
+      </tr>
+      <tr ng-repeat="team in teams">
+        <td ng-bind="team.coach"></td>
+        <td ng-bind="team.level"></td>
+        <td ng-bind="team.gender"></td>
+        <td>
+          <button ng-click="edit(team._id)">edit</button>
+        </td>
+      </tr>
+    </table>
+    <button ng-click="newTeam()">create new team</button>
+
+    <div ng-show="selectedTeam" class="edit-box">
+      <h2 ng-bind="selectedTeamAction"></h2>
+      <div class="row">
+        <div class="label">Coach:</div>
+        <div class="value">
+          <input ng-model="selectedTeam.coach">
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">Level:</div>
+        <div class="value">
+          <input ng-model="selectedTeam.level">
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">Gender:</div>
+        <div class="value">
+          <select ng-options="value as value for value in genderValues" ng-model="selectedTeam.gender">
+          </select>
+        </div>
+      </div>
+      <button ng-click="updateTeam()">Update</button>
+      <button ng-click="cancelEdit()">Cancel</button>
+    </div>
+
+  </div>
+  <div id="fieldsTab" class="tab" ng-controller="FieldController">
+
+    <table>
+      <tr>
+        <th>
+          Code
+        </th>
+        <th>
+          Description
+        </th>
+      </tr>
+      <tr ng-repeat="field in fields">
+        <td ng-bind="field.code"></td>
+        <td ng-bind="field.description"></td>
+        <td>
+          <button ng-click="edit(field._id)">edit</button>
+        </td>
+      </tr>
+    </table>
+    <button ng-click="newField()">create new field</button>
+
+    <div ng-show="selectedField" class="edit-box">
+      <h2 ng-bind="selectedFieldAction"></h2>
+      <div class="row">
+        <div class="label">Code:</div>
+        <div class="value">
+          <input ng-model="selectedField.code">
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">Description:</div>
+        <div class="value">
+          <input ng-model="selectedField.description">
+        </div>
+      </div>
+      <button ng-click="updateField()">Update</button>
+      <button ng-click="cancelEdit()">Cancel</button>
+    </div>
+
+  </div>
+  <div id="reoccursTab" class="tab" ng-controller="ReoccurController">
+    <table>
+      <tr>
+        <th>
+          Coach
+        </th>
+        <th>
+          Day of Week
+        </th>
+        <th>
+          Time
+        </th>
+        <th>
+          Field
+        </th>
+      </tr>
+      <tr ng-repeat="reoccur in reoccurs">
+        <td ng-bind="reoccur.coachId"></td>
+        <td ng-bind="reoccur.dayOfWeek"></td>
+        <td ng-bind="reoccur.fieldId"></td>
+        <td>
+          <button ng-click="edit(reoccur._id)">edit</button>
+        </td>
+      </tr>
+    </table>
+    <button ng-click="newReoccur()">create new reoccuring schedule</button>
+
+    <div ng-show="selectedReoccur" class="edit-box">
+      <h2 ng-bind="selectedReoccurAction"></h2>
+      <div class="row">
+        <div class="label">Coach:</div>
+        <div class="value">
+          <input ng-model="selectedReoccur.coachId">
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">Day of Week:</div>
+        <div class="value">
+          <input ng-model="selectedReoccur.dayOfWeek">
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">Field:</div>
+        <div class="value">
+          <select>
+          </select>
+        </div>
+      </div>
+      <button ng-click="updateReoccur()">Update</button>
+      <button ng-click="cancelEdit()">Cancel</button>
+    </div>
+
+  </div>
+  <div id="gamesTab" class="tab">
+
+
+  </div>
+  <div id="closuresTab" class="tab">
+
+
+  </div>
+
+
+
+
+</body>
+
+<script>
+  $(document).ready(function(e){
+    $('.tab-header').click(function(e){
+      var tab = $(this).data('tab');
+      $('.tab').removeClass('active');
+      $('#' + tab).addClass('active');
+      $('.tab-header').removeClass('active');
+      $(this).addClass('active');
+    })
+  })
+</script>
+</html>

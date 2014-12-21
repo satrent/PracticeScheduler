@@ -2,9 +2,9 @@
 
 /* Controllers */
 
-var reoccurApp = angular.module('reoccurApp', []);
+var practiceApp = angular.module('practiceApp');
 
-reoccurApp.controller('ReoccurController', function($scope, $http) {
+practiceApp.controller('ReoccurController', function($scope, $http) {
 
   $scope.loadReoccurs = function() {
     $http.get('/api/reoccurs')

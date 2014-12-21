@@ -47,7 +47,7 @@ h2 {
 
 .row .label {
   display: inline-block;
-  width: 70px;
+  min-width: 100px;
   text-align: right;
   margin: 4px;
 }
@@ -105,4 +105,38 @@ table {
   border: 1px solid #444;
   margin-bottom: 10px;
   padding: 10px;
+}
+
+.tab-header {
+  border: 1px solid #888;
+  border-top-radius: 7px;
+  -webkit-border-top-left-radius: 7px;
+  -webkit-border-top-right-radius: 7px;
+  padding: 10px;
+  font-weight: bold;
+  display: inline-block;
+  position: relative;
+  top: 1px;
+  cursor: pointer;
+}
+
+.tab-header.active {
+  border-bottom: none;
+  background: white;
+  z-index:100;
+  top: 2px;
+  cursor: default;
+}
+
+.tab {
+  padding: 10px;
+  display: none;
+}
+
+.tab.active {
+  display:block;
+  width: 900px;
+  min-height: 300px;
+  border: 1px solid #888;
+  z-index: 50;
 }

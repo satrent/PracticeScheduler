@@ -2,9 +2,9 @@
 
 /* Controllers */
 
-var fieldApp = angular.module('fieldApp', []);
+var practiceApp = angular.module('practiceApp');
 
-fieldApp.controller('FieldController', function($scope, $http) {
+practiceApp.controller('FieldController', function($scope, $http) {
 
   $scope.loadFields = function() {
     $http.get('/api/fields')
