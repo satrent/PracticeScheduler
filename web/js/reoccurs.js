@@ -9,7 +9,17 @@ practiceApp.controller('ReoccurController', function($scope, $http) {
   $scope.loadReoccurs = function() {
     $http.get('/api/reoccurs')
       .success(function(data){
-        $scope.reoccurs = data;
+        for(var i=0; i<data.reoccurs.length; i++){
+          var team = _.find(data.teams, function(t){return t._id == data.reoccurs[i].teamId});
+          var field = _.find(data.fields, function(f){return f._id == data.reoccurs[i].fieldId});
+          var dayOption = _.find($scope.dayOptions, function(o){return o.value == data.reoccurs[i].dayOfWeek});
+
+          data.reoccurs[i].teamName = team.coach;
+          data.reoccurs[i].fieldName = field.description;
+          data.reoccurs[i].dayOfWeekName = dayOption.name;
+        }
+
+        $scope.reoccurs = data.reoccurs;
       });
   }
 
@@ -17,18 +27,43 @@ practiceApp.controller('ReoccurController', function($scope, $http) {
 
   $scope.edit = function(id){
     $scope.selectedReoccurAction = 'Update Reoccuring Schedule';
-    var t = _.find($scope.reoccurs, function(t) {return t._id == id;});
+    var r = _.find($scope.reoccurs, function(r) {return r._id == id;});
 
     $scope.selectedReoccur = {
-      _id: t._id,
-      coach: t.coach,
-      level: t.level,
-      gender: t.gender
+      _id: r._id,
+      teamId: r.teamId,
+      dayOfWeek: r.dayOfWeek,
+      fieldId: r.fieldId
     };
   }
 
+  $scope.teamOptions = [];
+
+  $http.get('/api/teams')
+    .success(function(data){
+      $scope.teamOptions = _.map(data, function(d){return {name: d.level + ' ' + d.coach,  value:d._id}})
+    })
+
+  $scope.fieldOptions = [];
+
+  $http.get('/api/fields')
+    .success(function(data){
+      $scope.fieldOptions = _.map(data, function(d){return {name: d.code + ' ' + d.description, value: d._id}})
+    })
+
+  $scope.dayOptions = [
+    {name: ' -- ', value: -1},
+    {name: 'Monday', value: 0},
+    {name: 'Tuesday', value: 1},
+    {name: 'Wednesday', value: 2},
+    {name: 'Thursday', value: 3},
+    {name: 'Friday', value: 4},
+    {name: 'Saturday', value: 5},
+    {name: 'Sunday', value: 6}
+  ];
+
   $scope.newReoccur = function() {
-    $scope.selectedReoccurAction = 'Create New Reoccuring Schedule';
+    $scope.selectedReoccurAction = 'Create New Reoccurring Schedule';
     $scope.selectedReoccur = {coachId: -1, dayOfWeek: -1, fieldId: -1};
   }
 
@@ -39,7 +74,6 @@ practiceApp.controller('ReoccurController', function($scope, $http) {
   $scope.updateReoccur = function() {
     $http.post('/api/reoccur', {reoccur: $scope.selectedReoccur})
       .success(function(data){
-        console.log(data);
         $scope.loadReoccurs();
         $scope.selectedReoccur = null;
       })

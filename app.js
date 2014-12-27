@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var data = require('./data.js');
 var bodyParser = require('body-parser');
+var _ = require('./web/js/underscore-min.js');
 
 app.use('/', express.static(__dirname + '/web/pages'));
 app.use('/js', express.static(__dirname + '/web/js'));
@@ -11,17 +12,28 @@ app.use('/images', express.static(__dirname + '/web/images'));
 app.use( bodyParser.json() );
 
 
+var teams = [];
+var fields = [];
+
 // -- Teams
 app.get('/api/teams', function (req, res) {
-  data.getTeams(res, function(err, teams, r){
+  if (teams.length > 0){
+    res.json(teams);
+    return;
+  }
+
+  data.getTeams(res, function(err, data, r){
     if (err){
       r.json(err);
+      return;
     }
+    teams = data;
     r.json(teams);
   })
 })
 
 app.post('/api/team', function(req, res){
+  teams = [];
   data.updateTeam(req.body.team, function(result){
     res.json(result);
   })
@@ -30,7 +42,16 @@ app.post('/api/team', function(req, res){
 // -- Reoccurring Schedules
 app.get('/api/reoccurs', function(req, res){
   data.getReoccurs(res, function(err, reoccurs, r){
-    r.json(reoccurs, err);
+    if (err) {
+      r.json(err);
+      return;
+    }
+
+    r.json({
+      reoccurs: reoccurs,
+      teams: teams,
+      fields: fields
+    });
   })
 })
 
@@ -42,12 +63,18 @@ app.post('/api/reoccur', function(req, res){
 
 // -- Fields
 app.get('/api/fields', function(req, res){
-  data.getFields(res, function(err, fields, r){
+  if (fields.length > 0){
+    res.json(fields);
+    return;
+  }
+  data.getFields(res, function(err, data, r){
+    fields = data;
     r.json(fields);
   })
 })
 
 app.post('/api/field', function(req, res){
+  fields = [];
   data.updateField(req.body.field, function(result){
     res.json(result);
   })
