@@ -1,147 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="calendarApp">
 <head lang="en">
   <meta charset="UTF-8">
   <title>Practice Scheduler</title>
+  <script src="/js/angular.js"></script>
+  <script src="/js/underscore-min.js"></script>
   <script src="/js/jquery-1.11.1.min.js"></script>
   <script src="/js/moment.min.js"></script>
   <script src="/js/home.js"></script>
   <link href="/css/site.css" rel="stylesheet" type="text/css">
 </head>
-<body class="schedule">
+<body class="schedule" ng-controller="calendarController">
 <div id="previous"></div>
 <div id="next"></div>
 <h1>Week of April 20-26</h1>
 <div style="min-width: 850px;">
-  <div class="weekday">
-    <h2>Monday</h2>
-  </div>
-  <div class="weekday">
-    <h2>Tuesday</h2>
-    <div class="entry">
+  <div ng-repeat="day in days" class="weekday">
+    <h2 ng-bind="day.name"></h2>
+    <div ng-repeat="entry in day.events" class="entry" ng-class="{open: entry.open}">
       <div class="title">
-        6:00pm - Wilshire
+        <span ng-bind="entry.startTime"></span>
+        <span ng-bind="entry.fieldName"></span>
       </div>
-      U13 - Hanson
-    </div>
-    <div class="entry">
-      <div class="title">
-        6:00pm - C2
-      </div>
-      Open - Click to Request
-    </div>
-    <div class="entry">
-      <div class="title">
-        7:30pm - Wilshire
-      </div>
-      Girls U10 - Wilson
-    </div>
-    <div class="entry">
-      <div class="title">
-        6:00pm - C2
-      </div>
-      U13 - Coach A
-    </div>
-    <div class="entry">
-      <div class="title">
-        8:00pm - C2
-      </div>
-      U14 - Nelson
-    </div>  </div>
-  <div class="weekday">
-    <h2>Wednesday</h2>
-    <div class="entry">
-      <div class="title">
-        6:00pm - Wilshire
-      </div>
-      U13 - Hanson
-    </div>
-    <div class="entry open">
-      <div class="title">
-        6:00pm - C2
-      </div>
-      Open - Click to Request
-    </div>
-    <div class="entry">
-      <div class="title">
-        8:00pm - C2
-      </div>
-      U14 - Nelson
-    </div>  </div>
-  <div class="weekday">
-    <h2>Thursday</h2>
-    <div class="entry">
-      <div class="title">
-        6:00pm - Wilshire
-      </div>
-      U13 - Hanson
-    </div>
-    <div class="entry">
-      <div class="title">
-        6:00pm - C2
-      </div>
-      U13 - coach A
-    </div>
-    <div class="entry">
-      <div class="title">
-        7:30pm - Wilshire
-      </div>
-      Girls U10 - Wilson
-    </div>
-    <div class="entry open">
-      <div class="title">
-        6:00pm - C2
-      </div>
-      Open - Click to Request
-    </div>
-    <div class="entry">
-      <div class="title">
-        8:00pm - C2
-      </div>
-      U14 - Nelson
-    </div>  </div>
-  <div class="weekday">
-    <h2>Friday</h2>
-  </div>
-  <div class="weekday">
-    <h2>Saturday</h2>
-  </div>
-  <div class="weekday">
-    <h2>Sunday</h2>
-    <div class="entry">
-      <div class="title">
-        6:00pm - Wilshire
-      </div>
-        U13 - Hanson
-    </div>
-    <div class="entry">
-      <div class="title">
-        6:00pm - C2
-      </div>
-      U13 - coach A
-    </div>
-    <div class="entry">
-      <div class="title">
-        7:30pm - Wilshire
-      </div>
-      Girls U10 - Wilson
-    </div>
-    <div class="entry open">
-      <div class="title">
-        6:00pm - C2
-      </div>
-      Open - Click to Request
-    </div>
-    <div class="entry">
-      <div class="title">
-        8:00pm - C2
-      </div>
-      U14 - Nelson
+      <span ng-bind="entry.team"></span>
     </div>
   </div>
 </div>
-
-
 
 </body>
 </html>

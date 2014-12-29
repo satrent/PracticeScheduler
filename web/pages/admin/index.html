@@ -122,12 +122,20 @@
           Day of Week
         </th>
         <th>
+          Time
+        </th>
+        <th>
           Field
         </th>
       </tr>
       <tr ng-repeat="reoccur in reoccurs">
         <td ng-bind="reoccur.teamName"></td>
         <td ng-bind="reoccur.dayOfWeekName"></td>
+        <td>
+          <span ng-bind="reoccur.startTime"></span>
+            to
+          <span ng-bind="reoccur.endTime"></span>
+        </td>
         <td ng-bind="reoccur.fieldName"></td>
         <td>
           <button ng-click="edit(reoccur._id)">edit</button>
@@ -149,6 +157,20 @@
         <div class="label">Day of Week:</div>
         <div class="value">
           <select ng-options="value.value as value.name for value in dayOptions" ng-model="selectedReoccur.dayOfWeek">
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">Start Time:</div>
+        <div class="value">
+          <select ng-options="value.value as value.name for value in timeOptions" ng-model="selectedReoccur.startTime">
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="label">End Time:</div>
+        <div class="value">
+          <select ng-options="value.value as value.name for value in timeOptions" ng-model="selectedReoccur.endTime">
           </select>
         </div>
       </div>

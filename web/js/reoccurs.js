@@ -33,7 +33,9 @@ practiceApp.controller('ReoccurController', function($scope, $http) {
       _id: r._id,
       teamId: r.teamId,
       dayOfWeek: r.dayOfWeek,
-      fieldId: r.fieldId
+      fieldId: r.fieldId,
+      startTime: r.startTime || -1,
+      endTime: r.endTime || -1
     };
   }
 
@@ -62,9 +64,21 @@ practiceApp.controller('ReoccurController', function($scope, $http) {
     {name: 'Sunday', value: 6}
   ];
 
+  $scope.timeOptions = [
+    {name: ' -- ', value: -1},
+    {name: '6:00pm', value: 1800},
+    {name: '6:30pm', value: 1830},
+    {name: '7:00pm', value: 1900},
+    {name: '7:30pm', value: 1930},
+    {name: '8:00pm', value: 2000},
+    {name: '8:30pm', value: 2030},
+    {name: '9:00pm', value: 2100},
+    {name: '9:30pm', value: 2130}
+  ]
+
   $scope.newReoccur = function() {
     $scope.selectedReoccurAction = 'Create New Reoccurring Schedule';
-    $scope.selectedReoccur = {coachId: -1, dayOfWeek: -1, fieldId: -1};
+    $scope.selectedReoccur = {coachId: -1, dayOfWeek: -1, fieldId: -1, startTime: -1, endTime: -1};
   }
 
   $scope.cancelEdit = function() {
