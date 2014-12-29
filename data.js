@@ -1,8 +1,9 @@
 var moment = require("./web/js/moment.min.js");
 var _ = require('./web/js/underscore-min.js');
+var config = require('./config.js');
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://web:boosters@ds063870.mongolab.com:63870/practicescheduler');
+mongoose.connect(config.getDatabaseConnection());
 
 var upsert = function(model, data, f){
   if (!data._id) {
