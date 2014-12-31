@@ -6,7 +6,6 @@ calendarApp.controller('calendarController', function($scope, $http) {
   var teams = [];
   var fields = [];
   var reoccurs = [];
-  var slots = [1800, 1930];
   var days = [
     {name: 'Monday', value: 0},
     {name: 'Tuesday', value: 1},
@@ -16,6 +15,14 @@ calendarApp.controller('calendarController', function($scope, $http) {
     {name: 'Saturday', value: 5},
     {name: 'Sunday', value: 6}
     ];
+
+  var getSlots = function(weekday){
+    if (_.contains([0, 1, 2, 3, 4], weekday)){
+      return [1800, 1930];
+    } else {
+      return [1000, 1130, 1300];
+    }
+  }
 
   var teamPromise = $http.get('/api/teams')
     .success(function(data){
@@ -57,6 +64,7 @@ calendarApp.controller('calendarController', function($scope, $http) {
 
   var mergeData = function(){
     _.each(days, function(day){
+      var slots = getSlots(day.value);
       $scope.days[day.value] = {name: day.name, events: []};
       var events = [];
       _.each(fields, function(field){
