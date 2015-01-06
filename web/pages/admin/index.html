@@ -9,7 +9,7 @@
   <script src="/js/jquery-1.11.1.min.js"></script>
   <script src="/js/teams.js"></script>
   <script src="/js/fields.js"></script>
-  <script src="/js/reoccurs.js"></script>
+  <script src="/js/requests.js"></script>
   <link href="/css/site.css" rel="stylesheet" type="text/css">
 </head>
 <body class="teams" ng-app="practiceApp">
@@ -17,7 +17,7 @@
 
   <div class="tab-header active" data-tab="teamsTab">Teams</div>
   <div class="tab-header" data-tab="fieldsTab">Fields</div>
-  <div class="tab-header" data-tab="reoccursTab">Reoccurs</div>
+  <div class="tab-header" data-tab="requestsTab">Requests</div>
   <div class="tab-header" data-tab="gamesTab">Games</div>
   <div class="tab-header" data-tab="closuresTab">Closures</div>
 
@@ -71,6 +71,9 @@
       <button ng-click="cancelEdit()">Cancel</button>
     </div>
 
+    <div ng-show="selectedTeam" class="modal-bg"></div>
+
+
   </div>
   <div id="fieldsTab" class="tab" ng-controller="FieldController">
 
@@ -93,6 +96,8 @@
     </table>
     <button ng-click="newField()">create new field</button>
 
+    <div ng-show="selectedField" class="modal-bg"></div>
+
     <div ng-show="selectedField" class="edit-box">
       <h2 ng-bind="selectedFieldAction"></h2>
       <div class="row">
@@ -112,80 +117,32 @@
     </div>
 
   </div>
-  <div id="reoccursTab" class="tab" ng-controller="ReoccurController">
+
+  <div id="requestsTab" class="tab" ng-controller="RequestController">
     <table>
       <tr>
         <th>
           Team
         </th>
         <th>
-          Day of Week
-        </th>
-        <th>
-          Time
-        </th>
-        <th>
           Field
         </th>
+        <th>
+          Date
+        </th>
+        <th>
+          Start Time
+        </th>
       </tr>
-      <tr ng-repeat="reoccur in reoccurs">
-        <td ng-bind="reoccur.teamName"></td>
-        <td ng-bind="reoccur.dayOfWeekName"></td>
-        <td>
-          <span ng-bind="reoccur.startTime"></span>
-            to
-          <span ng-bind="reoccur.endTime"></span>
-        </td>
-        <td ng-bind="reoccur.fieldName"></td>
-        <td>
-          <button ng-click="edit(reoccur._id)">edit</button>
-        </td>
+      <tr>
+
       </tr>
     </table>
-    <button ng-click="newReoccur()">create new reoccuring schedule</button>
 
-    <div ng-show="selectedReoccur" class="edit-box">
-      <h2 ng-bind="selectedReoccurAction"></h2>
-      <div class="row">
-        <div class="label">Coach:</div>
-        <div class="value">
-          <select ng-options="value.value as value.name for value in teamOptions" ng-model="selectedReoccur.teamId">
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="label">Day of Week:</div>
-        <div class="value">
-          <select ng-options="value.value as value.name for value in dayOptions" ng-model="selectedReoccur.dayOfWeek">
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="label">Start Time:</div>
-        <div class="value">
-          <select ng-options="value.value as value.name for value in timeOptions" ng-model="selectedReoccur.startTime">
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="label">End Time:</div>
-        <div class="value">
-          <select ng-options="value.value as value.name for value in timeOptions" ng-model="selectedReoccur.endTime">
-          </select>
-        </div>
-      </div>
-      <div class="row">
-        <div class="label">Field:</div>
-        <div class="value">
-          <select ng-options="value.value as value.name for value in fieldOptions" ng-model="selectedReoccur.fieldId">
-          </select>
-        </div>
-      </div>
-      <button ng-click="updateReoccur()">Update</button>
-      <button ng-click="cancelEdit()">Cancel</button>
-    </div>
+    <button ng-click="newRequest()">create new request</button>
 
   </div>
+
   <div id="gamesTab" class="tab">
 
 

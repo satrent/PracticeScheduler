@@ -11,13 +11,13 @@
   <link href="/css/site.css" rel="stylesheet" type="text/css">
 </head>
 <body class="schedule" ng-controller="calendarController">
-<div id="previous"></div>
-<div id="next"></div>
-<h1>Week of April 20-26</h1>
+<div ng-click="previousWeek()" id="previous"></div>
+<div ng-click="nextWeek()" id="next"></div>
+<h1>Week of <span ng-bind="startDate"></span></h1>
 <div style="min-width: 850px;">
   <div ng-repeat="day in days" class="weekday">
     <h2 ng-bind="day.name"></h2>
-    <div ng-repeat="entry in day.events" class="entry" ng-class="{open: entry.open}">
+    <div ng-click="request(entry)" ng-repeat="entry in day.events" class="entry" ng-class="{open: entry.open}">
       <div class="title">
         <span ng-bind="entry.startTime"></span>
         <span ng-bind="entry.fieldName"></span>
@@ -26,6 +26,31 @@
     </div>
   </div>
 </div>
+
+<div ng-show="selectedSlot" class="modal-bg"></div>
+
+<div ng-show="selectedSlot" class="edit-box">
+  <h2>Request Slot</h2>
+  <div class="row">
+    <div class="label">Team:</div>
+    <div class="value">
+      <select ng-options="team.value as team.name for team in teamOptions" ng-model="selectedSlot.teamId">
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="label">Field:</div>
+    <div ng-bind="selectedSlot.fieldName" class="value"></div>
+  </div>
+  <div class="row">
+    <div class="label">Start Time:</div>
+    <div ng-bind="selectedSlot.startTime" class="value"></div>
+  </div>
+
+  <button ng-click="requestSlot()">Request</button>
+  <button ng-click="cancel()">Cancel</button>
+</div>
+
 
 </body>
 </html>

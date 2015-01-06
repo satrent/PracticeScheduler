@@ -15,6 +15,20 @@ var upsert = function(model, data, f){
   }
 }
 
+// -- Requests
+var Request = mongoose.model('Request', {teamId: mongoose.Schema.Types.ObjectId, date: Date, startTime: Number, endTime: Number, fieldId: mongoose.Schema.Types.ObjectId});
+
+exports.getRequest = function(res, callback) {
+  Requests.find({}, function(err, reoccurs){
+    callback(err, reoccurs, res);
+  })
+}
+
+exports.updateRequest = function(request, f){
+  upsert(Request, request, f);
+}
+
+
 // -- Teams
 var Team = mongoose.model('Team', { level: String, coach: String, gender: String });
 
@@ -26,19 +40,6 @@ exports.getTeams = function(res, callback) {
 
 exports.updateTeam = function(team, f){
   upsert(Team, team, f);
-}
-
-// -- Reoccurring Schedules
-var Reoccur = mongoose.model('Reoccur', {teamId: mongoose.Schema.Types.ObjectId, dayOfWeek: Number, startTime: Number, endTime: Number, fieldId: mongoose.Schema.Types.ObjectId});
-
-exports.getReoccurs = function(res, callback) {
-  Reoccur.find({}, function(err, reoccurs){
-    callback(err, reoccurs, res);
-  })
-}
-
-exports.updateReoccur = function(reoccur, f){
-  upsert(Reoccur, reoccur, f);
 }
 
 // -- Fields

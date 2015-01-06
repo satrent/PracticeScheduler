@@ -3,17 +3,42 @@ var calendarApp = angular.module('calendarApp', []);
 
 calendarApp.controller('calendarController', function($scope, $http) {
 
+  var today = new moment();
+  var seasonStart = new moment({year: 2015, month: 3, day: 5});
+
+  if (today.isBefore(seasonStart)){
+    today = seasonStart;
+  }
+
+  var weekStart = today.add(today.weekday() * -1, 'day');
+
+  $scope.startDate = weekStart.format("MMM DD, YYYY");;
+
+
+  $scope.previousWeek = function(){
+    var m = new moment($scope.startDate);
+    m = m.subtract(7, 'day');
+    $scope.startDate = m.format("MMM DD, YYYY");
+  }
+
+  $scope.nextWeek = function() {
+    var m = new moment($scope.startDate);
+    m = m.add(7, 'day');
+    $scope.startDate = m.format("MMM DD, YYYY");
+  }
+
+
   var teams = [];
   var fields = [];
-  var reoccurs = [];
+
   var days = [
-    {name: 'Monday', value: 0},
-    {name: 'Tuesday', value: 1},
-    {name: 'Wednesday', value: 2},
-    {name: 'Thursday', value: 3},
-    {name: 'Friday', value: 4},
-    {name: 'Saturday', value: 5},
-    {name: 'Sunday', value: 6}
+    {name: 'Monday', value: 0, date: weekStart},
+    {name: 'Tuesday', value: 1, date: weekStart.add(1, 'day')},
+    {name: 'Wednesday', value: 2, date: weekStart.add(2, 'day')},
+    {name: 'Thursday', value: 3, date: weekStart.add(3, 'day')},
+    {name: 'Friday', value: 4, date: weekStart.add(4, 'day')},
+    {name: 'Saturday', value: 5, date: weekStart.add(5, 'day')},
+    {name: 'Sunday', value: 6, date: weekStart.add(6, 'day')}
     ];
 
   var getSlots = function(weekday){
@@ -27,6 +52,12 @@ calendarApp.controller('calendarController', function($scope, $http) {
   var teamPromise = $http.get('/api/teams')
     .success(function(data){
       teams = data;
+      $scope.teamOptions =[];
+
+      _.each(teams, function(team){
+        $scope.teamOptions.push({value: team._id, name: team.coach + ' - ' + team.level})
+      })
+
     })
 
   var fieldPromise = $http.get('/api/fields')
@@ -34,16 +65,9 @@ calendarApp.controller('calendarController', function($scope, $http) {
       fields = data;
     })
 
-  var reoccurPromise = $http.get('/api/reoccurs')
-    .success(function(data){
-      reoccurs = data.reoccurs;
-    });
-
   teamPromise.then(function(){
     fieldPromise.then(function(){
-      reoccurPromise.then(function(){
-        mergeData();
-      })
+      mergeData();
     })
   })
 
@@ -62,6 +86,35 @@ calendarApp.controller('calendarController', function($scope, $http) {
 
   $scope.days = [];
 
+  $scope.request = function(entry){
+    $scope.selectedSlot = {
+      startTime: entry.startTime,
+      timeSlot: entry.timeSlot,
+      fieldName: entry.fieldName,
+      fieldId: entry.fieldId
+    };
+  }
+
+  $scope.cancel = function() {
+    $scope.selectedSlot = null;
+  }
+
+  $scope.requestSlot = function(){
+    var request = {
+      _id: null,
+      teamId: $scope.selectedSlot.teamId,
+      fieldId: $scope.selectedSlot.fieldId,
+      startTime: $scope.selectedSlot.timeSlot
+    }
+
+    $http.post('/api/request', {request: request})
+      .success(function(data){
+        console.log(data);
+
+      })
+
+  }
+
   var mergeData = function(){
     _.each(days, function(day){
       var slots = getSlots(day.value);
@@ -72,19 +125,9 @@ calendarApp.controller('calendarController', function($scope, $http) {
 
           //check for a game.
 
-          // check for a reoccurring practice
-          var reoccur = _.find(reoccurs, function(r){return r.fieldId == field._id && r.startTime == slot && r.dayOfWeek == day.value})
-
-          if (reoccur) {
-            var team1 = _.find(teams, function(t){return t._id == reoccur.teamId})
-            events.push(
-              {timeSlot: slot, startTime: formatTime(slot), fieldName: field.description, team: team1.level + ' ' + team1.coach, open: false}
-            )
-          } else {
-            events.push(
-              {timeSlot: slot, startTime: formatTime(slot), fieldName: field.description, team: 'Open', open: true}
-            )
-          }
+          events.push(
+            {timeSlot: slot, startTime: formatTime(slot), fieldId: field._id, fieldName: field.description, team: 'Open', open: true}
+          )
 
           // check for a fulfilled request
 
@@ -97,38 +140,7 @@ calendarApp.controller('calendarController', function($scope, $http) {
     })
   }
 
-});
 
-//var weekOf = new moment();
-//
-//var formatHeader = function(d){
-//  var d = new moment(d);
-//  $('h1').text('Week of ' + d.format("MMM DD") + ' to ' + d.add(6, 'days').format("MMM DD, YYYY"));
-//}
-//
-//
-//$(document).ready(function(){
-//
-//  weekOf = weekOf.add((weekOf.weekday() * -1) + 1, 'days');
-//
-//  formatHeader(weekOf);
-//
-//  $.ajax('/api/teams', function(data){
-//    console.log(data);
-//  })
-//
-//  $('.entry.open').click(function(){
-//    window.location = '/request.html';
-//  })
-//
-//  $('#previous').click(function(e){
-//    weekOf = weekOf.add(-7, 'days');
-//    formatHeader(weekOf);
-//  })
-//
-//  $('#next').click(function(e){
-//    weekOf = weekOf.add(7, 'days');
-//    formatHeader(weekOf);
-//  })
-//});
+
+});
 

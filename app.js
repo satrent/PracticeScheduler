@@ -14,6 +14,7 @@ app.use( bodyParser.json() );
 
 var teams = [];
 var fields = [];
+var requests = [];
 
 // -- Teams
 app.get('/api/teams', function (req, res) {
@@ -39,24 +40,22 @@ app.post('/api/team', function(req, res){
   })
 })
 
-// -- Reoccurring Schedules
-app.get('/api/reoccurs', function(req, res){
-  data.getReoccurs(res, function(err, reoccurs, r){
-    if (err) {
-      r.json(err);
-      return;
-    }
 
-    r.json({
-      reoccurs: reoccurs,
-      teams: teams,
-      fields: fields
-    });
+// -- Requests!
+app.get('/api/requests', function(req, res){
+  if (requests.length > 0){
+    res.json(requests);
+    return;
+  }
+  data.getRequests(res, function(err, data, r){
+    requests = data;
+    r.json(requests);
   })
 })
 
-app.post('/api/reoccur', function(req, res){
-  data.updateReoccur(req.body.reoccur, function(result){
+app.post('/api/request', function(req, res){
+  requests = [];
+  data.updateRequest(req.body.request, function(result){
     res.json(result);
   })
 })
