@@ -58,9 +58,19 @@ h2 {
 
 button {
   min-width: 100px;
-  height: 25px;
-  background: #ddd;
+  height: 24px;
   margin-left: 20px;
+  border-radius: 8px;
+  background: #33f;
+  font-weight: bold;
+  color: white;
+  border: #000;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #77f;
+  border: #fff;
 }
 
 .schedule #previous{
@@ -151,4 +161,20 @@ table {
   min-height: 300px;
   border: 1px solid #888;
   z-index: 50;
+}
+
+.row {
+  font: 12px Helvetica;
+  border-bottom: 1px solid #ddd;
+}
+
+.col {
+  display: inline-block;
+  min-width: 80px;
+  margin: 0px;
+  padding: 4px;
+}
+
+.header .col {
+  font-weight: bold;
 }

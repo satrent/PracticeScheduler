@@ -9,3 +9,5 @@ node_modules/*
 .idea/vcs.xml
 
 config.js
+
+/db/*

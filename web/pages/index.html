@@ -8,6 +8,7 @@
   <script src="/js/jquery-1.11.1.min.js"></script>
   <script src="/js/moment.min.js"></script>
   <script src="/js/home.js"></script>
+  <script src="/js/util.js"></script>
   <link href="/css/site.css" rel="stylesheet" type="text/css">
 </head>
 <body class="schedule" ng-controller="calendarController">
@@ -23,6 +24,7 @@
         <span ng-bind="entry.fieldName"></span>
       </div>
       <span ng-bind="entry.team"></span>
+      (<span ng-bind="entry.pendingRequests"></span>)
     </div>
   </div>
 </div>

@@ -55,6 +55,7 @@ app.get('/api/requests', function(req, res){
 
 app.post('/api/request', function(req, res){
   requests = [];
+  req.body.request.fulfilled = false;
   data.updateRequest(req.body.request, function(result){
     res.json(result);
   })

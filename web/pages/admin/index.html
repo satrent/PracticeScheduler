@@ -10,6 +10,7 @@
   <script src="/js/teams.js"></script>
   <script src="/js/fields.js"></script>
   <script src="/js/requests.js"></script>
+  <script src="/js/util.js"></script>
   <link href="/css/site.css" rel="stylesheet" type="text/css">
 </head>
 <body class="teams" ng-app="practiceApp">
@@ -23,27 +24,22 @@
 
   <div id="teamsTab" class="tab active" ng-controller="TeamController">
 
-    <table>
-      <tr>
-        <th>
-          Coach
-        </th>
-        <th>
-          Level
-        </th>
-      </tr>
-      <tr ng-repeat="team in teams">
-        <td ng-bind="team.coach"></td>
-        <td>
-          <span ng-bind="team.level"></span>
-          -
-          <span ng-bind="team.gender"></span>
-        </td>
-        <td>
-          <button role="link" ng-click="edit(team._id)">edit</button>
-        </td>
-      </tr>
-    </table>
+    <div class="row header">
+      <div class="col" style="width: 140px;">Coach</div>
+      <div class="col" style="width: 150px;">Level</div>
+    </div>
+    <div ng-repeat="team in teams" class="row">
+      <div ng-bind="team.coach" class="col" style="width: 140px;"></div>
+      <div class="col" style="width: 150px;">
+        <span ng-bind="team.level"></span>
+        -
+        <span ng-bind="team.gender"></span>
+      </div>
+      <div class="col">
+        <button role="link" ng-click="edit(team._id)">edit</button>
+      </div>
+    </div>
+
     <button ng-click="newTeam()">create new team</button>
 
     <div ng-show="selectedTeam" class="edit-box">
@@ -77,23 +73,18 @@
   </div>
   <div id="fieldsTab" class="tab" ng-controller="FieldController">
 
-    <table>
-      <tr>
-        <th>
-          Code
-        </th>
-        <th>
-          Description
-        </th>
-      </tr>
-      <tr ng-repeat="field in fields">
-        <td ng-bind="field.code"></td>
-        <td ng-bind="field.description"></td>
-        <td>
-          <button ng-click="edit(field._id)">edit</button>
-        </td>
-      </tr>
-    </table>
+    <div class="row header">
+      <div class="col" style="width: 60px;">Code</div>
+      <div class="col" style="width: 120px;">Description</div>
+    </div>
+    <div ng-repeat="field in fields" class="row">
+      <div ng-bind="field.code" class="col" style="width: 60px;"></div>
+      <div ng-bind="field.description" class="col" style="width: 120px;"></div>
+      <div class="col">
+        <button ng-click="edit(field._id)">edit</button>
+      </div>
+    </div>
+
     <button ng-click="newField()">create new field</button>
 
     <div ng-show="selectedField" class="modal-bg"></div>
@@ -119,27 +110,18 @@
   </div>
 
   <div id="requestsTab" class="tab" ng-controller="RequestController">
-    <table>
-      <tr>
-        <th>
-          Team
-        </th>
-        <th>
-          Field
-        </th>
-        <th>
-          Date
-        </th>
-        <th>
-          Start Time
-        </th>
-      </tr>
-      <tr>
-
-      </tr>
-    </table>
-
-    <button ng-click="newRequest()">create new request</button>
+    <div class="row header">
+      <div class="col" style="width: 160px;">Team</div>
+      <div class="col" style="width: 140px;">Field</div>
+      <div class="col" style="width: 110px;">Date</div>
+      <div class="col" style="width: 110px;">Start Time</div>
+    </div>
+    <div ng-repeat="request in requests" class="row">
+      <div ng-bind="request.teamName" class="col" style="width: 160px;"></div>
+      <div ng-bind="request.fieldName" class="col" style="width: 140px;"></div>
+      <div ng-bind="request.date" class="col" style="width: 110px;"></div>
+      <div ng-bind="request.startTime" class="col" style="width: 110px;"></div>
+    </div>
 
   </div>
 

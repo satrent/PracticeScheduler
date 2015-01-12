@@ -30,6 +30,7 @@ calendarApp.controller('calendarController', function($scope, $http) {
 
   var teams = [];
   var fields = [];
+  var requests = [];
 
   var days = [
     {name: 'Monday', value: 0, date: weekStart},
@@ -57,32 +58,25 @@ calendarApp.controller('calendarController', function($scope, $http) {
       _.each(teams, function(team){
         $scope.teamOptions.push({value: team._id, name: team.coach + ' - ' + team.level})
       })
-
     })
 
   var fieldPromise = $http.get('/api/fields')
     .success(function(data){
       fields = data;
+    });
+
+  var requestPromise = $http.get('api/requests')
+    .success(function(data){
+      requests = data;
     })
 
   teamPromise.then(function(){
     fieldPromise.then(function(){
-      mergeData();
+      requestPromise.then(function(){
+        mergeData();
+      })
     })
   })
-
-  var formatTime = function(n){
-    var h = Number(String(n).substr(0, String(n).length - 2));
-    var m = String(n).substr(String(n).length - 2, 2);
-    var x = 'am';
-
-    if (h > 12){
-      h = h - 12;
-      x = 'pm';
-    }
-
-    return h + ':' + m + x;
-  }
 
   $scope.days = [];
 
@@ -91,7 +85,9 @@ calendarApp.controller('calendarController', function($scope, $http) {
       startTime: entry.startTime,
       timeSlot: entry.timeSlot,
       fieldName: entry.fieldName,
-      fieldId: entry.fieldId
+      fieldId: entry.fieldId,
+      date: entry.date,
+      entry: entry
     };
   }
 
@@ -104,18 +100,19 @@ calendarApp.controller('calendarController', function($scope, $http) {
       _id: null,
       teamId: $scope.selectedSlot.teamId,
       fieldId: $scope.selectedSlot.fieldId,
-      startTime: $scope.selectedSlot.timeSlot
+      startTime: $scope.selectedSlot.timeSlot,
+      date: $scope.selectedSlot.date
     }
 
     $http.post('/api/request', {request: request})
       .success(function(data){
-        console.log(data);
-
+        $scope.selectedSlot.entry.pendingRequests += 1;
+        $scope.selectedSlot = null;
       })
-
   }
 
   var mergeData = function(){
+    var date = moment($scope.startDate);
     _.each(days, function(day){
       var slots = getSlots(day.value);
       $scope.days[day.value] = {name: day.name, events: []};
@@ -125,18 +122,25 @@ calendarApp.controller('calendarController', function($scope, $http) {
 
           //check for a game.
 
+          console.log('looking for date... ' + date.format("MM/DD/YYYY"));
+
+          // check for fulfilled and pending requests
+          var fulfilled = _.find(requests, function(r){return r.fieldId == field._id && r.startTime == slot && r.fulfilled == true})
+          var pending = _.where(requests, {fieldId: field._id, startTime: slot, fulfilled: false, date: date.format("MM/DD/YYYY") });
+
+          console.log(pending);
+         // if not... then it's open
+
           events.push(
-            {timeSlot: slot, startTime: formatTime(slot), fieldId: field._id, fieldName: field.description, team: 'Open', open: true}
+            {timeSlot: slot, startTime: practice.utils.formatTime(slot), pendingRequests: pending.length, grantedRequest: fulfilled, fieldId: field._id, fieldName: field.description, team: 'Open', open: fulfilled == null, date: date.format("MM/DD/YYYY")}
           )
-
-          // check for a fulfilled request
-
-          // if not... then it's open
-
         })
       })
 
       $scope.days[day.value].events = _.sortBy(events, function(e){return e.timeSlot});
+
+      date = date.add(1, 'days');
+      console.log('added a day? ' + date.format("MM/DD/YYYY"));
     })
   }
 

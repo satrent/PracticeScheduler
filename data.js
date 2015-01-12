@@ -16,10 +16,10 @@ var upsert = function(model, data, f){
 }
 
 // -- Requests
-var Request = mongoose.model('Request', {teamId: mongoose.Schema.Types.ObjectId, date: Date, startTime: Number, endTime: Number, fieldId: mongoose.Schema.Types.ObjectId});
+var Request = mongoose.model('Request', {teamId: mongoose.Schema.Types.ObjectId, date: String, startTime: Number, endTime: Number, fieldId: mongoose.Schema.Types.ObjectId, fulfilled: Boolean});
 
-exports.getRequest = function(res, callback) {
-  Requests.find({}, function(err, reoccurs){
+exports.getRequests = function(res, callback) {
+  Request.find({}, function(err, reoccurs){
     callback(err, reoccurs, res);
   })
 }
