@@ -36,6 +36,10 @@ h2 {
   padding: 4px;
 }
 
+.entry.fulfilled {
+  background-color: #acf;
+}
+
 .entry.open {
   background-color: #ffa;
   cursor: pointer;

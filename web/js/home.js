@@ -122,25 +122,30 @@ calendarApp.controller('calendarController', function($scope, $http) {
 
           //check for a game.
 
-          console.log('looking for date... ' + date.format("MM/DD/YYYY"));
-
           // check for fulfilled and pending requests
-          var fulfilled = _.find(requests, function(r){return r.fieldId == field._id && r.startTime == slot && r.fulfilled == true})
+          var fulfilled = _.find(requests, function(r){return r.fieldId == field._id && r.startTime == slot && r.fulfilled == true && r.date == date.format("MM/DD/YYYY")})
           var pending = _.where(requests, {fieldId: field._id, startTime: slot, fulfilled: false, date: date.format("MM/DD/YYYY") });
 
-          console.log(pending);
+          if (fulfilled){
+            console.log(fulfilled);
+            var grantedTeam = _.find(teams, function(t){return t._id == fulfilled.teamId});
+            events.push(
+              {timeSlot: slot, startTime: practice.utils.formatTime(slot), pendingRequests: 0, grantedRequest: fulfilled, fieldId: field._id, fieldName: field.description, team: grantedTeam.coach + ' - ' + grantedTeam.level + ' ' + grantedTeam.gender, open: fulfilled == null, date: date.format("MM/DD/YYYY")}
+            )
+          } else {
+            events.push(
+              {timeSlot: slot, startTime: practice.utils.formatTime(slot), pendingRequests: pending.length, grantedRequest: null, fieldId: field._id, fieldName: field.description, team: 'Open', open: fulfilled == null, date: date.format("MM/DD/YYYY")}
+            )
+          }
+
          // if not... then it's open
 
-          events.push(
-            {timeSlot: slot, startTime: practice.utils.formatTime(slot), pendingRequests: pending.length, grantedRequest: fulfilled, fieldId: field._id, fieldName: field.description, team: 'Open', open: fulfilled == null, date: date.format("MM/DD/YYYY")}
-          )
         })
       })
 
       $scope.days[day.value].events = _.sortBy(events, function(e){return e.timeSlot});
 
       date = date.add(1, 'days');
-      console.log('added a day? ' + date.format("MM/DD/YYYY"));
     })
   }
 

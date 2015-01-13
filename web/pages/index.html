@@ -18,13 +18,15 @@
 <div style="min-width: 850px;">
   <div ng-repeat="day in days" class="weekday">
     <h2 ng-bind="day.name"></h2>
-    <div ng-click="request(entry)" ng-repeat="entry in day.events" class="entry" ng-class="{open: entry.open}">
+    <div ng-click="request(entry)" ng-repeat="entry in day.events" class="entry" ng-class="{open: entry.open, fulfilled: entry.grantedRequest}">
       <div class="title">
         <span ng-bind="entry.startTime"></span>
         <span ng-bind="entry.fieldName"></span>
       </div>
       <span ng-bind="entry.team"></span>
-      (<span ng-bind="entry.pendingRequests"></span>)
+      <span ng-show="entry.pendingRequests >  0">
+        (<span ng-bind="entry.pendingRequests"></span>)
+      </span>
     </div>
   </div>
 </div>
