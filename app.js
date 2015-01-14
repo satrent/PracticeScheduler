@@ -3,6 +3,7 @@ var app = express();
 var data = require('./data.js');
 var bodyParser = require('body-parser');
 var _ = require('./web/js/underscore-min.js');
+var moment = require('./web/js/moment.min.js');
 
 app.use('/', express.static(__dirname + '/web/pages'));
 app.use('/js', express.static(__dirname + '/web/js'));
@@ -80,6 +81,27 @@ app.post('/api/field', function(req, res){
   })
 })
 
+
+// -- Weeks
+app.get('/api/weeks', function(req, res){
+  data.getWeeks(res, function(err, data, r){
+    r.json(data);
+  })
+})
+
+app.post('/api/week', function(req, res){
+  // validation. Check that the start date is a Monday.
+  var m = new moment(req.body.week.startDate);
+
+  if (m.weekday() != 1){
+    res.json({errors: ['start date must be a Monday']});
+    return;
+  }
+
+  data.updateWeek(req.body.week, function(result){
+    res.json(result);
+  })
+})
 
 // - Start Server
 var server = app.listen(8895, function () {

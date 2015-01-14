@@ -51,7 +51,19 @@ exports.getFields = function(res, callback) {
   })
 }
 
-//  This one is the one that currently works for both update and create.
 exports.updateField = function(field, f){
   upsert(Field, field, f);
+}
+
+// -- Weeks
+var Week = mongoose.model("Week", {startDate: String, status: String});
+
+exports.getWeeks = function(res, callback) {
+  Week.find({}, function(err, weeks){
+    callback(err, weeks, res);
+  })
+}
+
+exports.updateWeek = function(week, f){
+  upsert(Week, week, f);
 }

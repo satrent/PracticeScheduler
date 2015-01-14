@@ -10,7 +10,9 @@
   <script src="/js/teams.js"></script>
   <script src="/js/fields.js"></script>
   <script src="/js/requests.js"></script>
+  <script src="/js/calendar.js"></script>
   <script src="/js/util.js"></script>
+
   <link href="/css/site.css" rel="stylesheet" type="text/css">
 </head>
 <body class="teams" ng-app="practiceApp">
@@ -19,8 +21,7 @@
   <div class="tab-header active" data-tab="teamsTab">Teams</div>
   <div class="tab-header" data-tab="fieldsTab">Fields</div>
   <div class="tab-header" data-tab="requestsTab">Requests</div>
-  <div class="tab-header" data-tab="gamesTab">Games</div>
-  <div class="tab-header" data-tab="closuresTab">Closures</div>
+  <div class="tab-header" data-tab="calendarTab">Calendar</div>
 
   <div id="teamsTab" class="tab active" ng-controller="TeamController">
 
@@ -108,7 +109,6 @@
     </div>
 
   </div>
-
   <div id="requestsTab" class="tab" ng-controller="RequestController">
     <div class="row header">
       <div class="col" style="width: 160px;">Team</div>
@@ -125,17 +125,37 @@
 
   </div>
 
-  <div id="gamesTab" class="tab">
+  <div id="calendarTab" class="tab" ng-controller="CalendarController">
+    <div class="row header">
+      <div class="col" style="width: 200px;">Start Date</div>
+      <div class="col" style="width: 80px;">Status</div>
+      <div class="col" style="width: 200px;">Actions</div>
+    </div>
+    <div ng-repeat="week in weeks" class="row">
+      <div ng-bind="week.startDate" class="col" style="width: 200px;"></div>
+      <div ng-bind="week.status" class="col" style="width: 80px;"></div>
+      <div class="col" style="width: 200px;">
+        <button ng-show="week.status == 'open'">close week</button>
+        <button ng-click="openWeek(week)" ng-show="week.status == 'future'">open week</button>
+      </div>
+    </div>
 
+    <button ng-click="newWeek()">Create New Week</button>
 
+    <div ng-show="selectedWeek" class="modal-bg"></div>
+    <div ng-show="selectedWeek" class="edit-box">
+      <h2 ng-bind="selectedWeekAction"></h2>
+      <div class="row">
+        <div class="label">Start Date:</div>
+        <div class="value">
+          <input ng-model="selectedWeek.startDate">
+        </div>
+      </div>
+      <button ng-click="updateWeek()">Update</button>
+      <button ng-click="cancelEdit()">Cancel</button>
+      <div ng-bind="updateMessage" class="error"></div>
+    </div>
   </div>
-  <div id="closuresTab" class="tab">
-
-
-  </div>
-
-
-
 
 </body>
 
