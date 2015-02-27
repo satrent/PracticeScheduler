@@ -140,7 +140,7 @@
       </div>
     </div>
 
-    <button ng-click="newWeek()">Create New Week</button>
+    <button ng-click="createCalendar()">Create Season Calendar</button>
 
     <div ng-show="selectedWeek" class="modal-bg"></div>
     <div ng-show="selectedWeek" class="edit-box">
@@ -151,7 +151,7 @@
           <input ng-model="selectedWeek.startDate">
         </div>
       </div>
-      <button ng-click="updateWeek()">Update</button>
+      <button ng-click="generateCalendar()">Create</button>
       <button ng-click="cancelEdit()">Cancel</button>
       <div ng-bind="updateMessage" class="error"></div>
     </div>

@@ -12,5 +12,15 @@ var practice = {
 
       return h + ':' + m + x;
     }
+  },
+
+  ajax: function(params){
+
+    if (!params.contentType) {
+      params.contentType = 'application/json';
+    }
+
+    $.ajax(params);
   }
+
 }

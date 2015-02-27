@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Calendar Admin</title>
+  <script src="/js/moment.min.js"></script>
+  <script src="/js/underscore-min.js"></script>
+  <script src="/js/jquery-1.11.1.min.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/knockout-3.2.0.js"></script>
+
+  <link href="/css/site.css" rel="stylesheet" type="text/css">
+</head>
+<body class="teams">
+<h1>Calendar Admin</h1>
+
+
+<div class="row header">
+  <div class="col" style="width: 200px;">Start Date</div>
+  <div class="col" style="width: 80px;">Status</div>
+  <div class="col text-center" style="width: 250px;">Actions</div>
+</div>
+<!-- ko foreach: weeks -->
+<div class="row">
+  <div data-bind="text: startDate" class="col" style="width: 200px;"></div>
+  <div data-bind="text: status" class="col" style="width: 80px;"></div>
+  <div class="col" style="width: 250px;">
+    <button data-bind="click: closeWeek, visible: status == open">close week</button>
+    <button data-bind="click: openWeek, visible: status == 'future'">open week</button>
+  </div>
+</div>
+<!-- /ko -->
+
+<div data-bind="visible: showModal" class="modal-bg"></div>
+<div data-bind="visible: showModal" class="edit-box">
+  <h2 data-bind="text: selectedAction"></h2>
+  <div class="row">
+    <div class="label">Start Date:</div>
+    <div class="value">
+      <input data-bind="value: selectedWeek.startDate" >
+    </div>
+  </div>
+  <button data-bind="click: updateWeek">Create</button>
+  <button data-bind="click: cancelUpdate" >Cancel</button>
+  <div data-bind="text: updateMessage" class="error"></div>
+</div>
+</div>
+
+
+<button data-bind="click: createNextWeek">Create Next Week</button>
+
+</body>
+<script>
+  var calendarViewModel = function() {
+    var self = this;
+
+    this.weeks = ko.observableArray();
+    this.showModal = ko.observable(false);
+    this.selectedAction = ko.observable('');
+
+    this.selectedWeek = {
+      weekNumber: ko.observable(0),
+      startDate: ko.observable(''),
+      status: ko.observable('')
+    }
+
+    this.getMaxWeekNumber = function(){
+      if (this.weeks().length == 0){
+        return 0;
+      }
+      var maxWeek = _.max(this.weeks(), function(week){return week.weekNumber()});
+      return maxWeek.weekNumber();
+    }
+
+    this.updateMessage = ko.observable('');
+
+    this.loadWeeks = function() {
+
+      var self = this;
+      this.weeks.removeAll();
+
+      practice.ajax({
+        url: "/api/weeks",
+        type: 'GET',
+        success: function(weeks){
+          $.each(weeks, function(i, week){
+            self.weeks.push(week);
+          })
+        }
+      })
+    }
+
+    this.updateWeek = function() {
+      var week = {
+        weekNumber: this.getMaxWeekNumber() + 1,
+        startDate: this.selectedWeek.startDate(),
+        status: "future"
+      }
+
+      practice.ajax({
+        url: "/api/week",
+        data: JSON.stringify({week: week}),
+        type: "POST",
+        contentType: 'application/json',
+        success: function(response){
+          if (response && response.errors && response.errors.length > 0){
+            model.updateMessage(response.errors.join(' '));
+          } else {
+            model.showModal(false);
+            model.loadWeeks();
+          }
+
+        }
+      })
+    };
+
+    this.cancelUpdate = function(){
+      this.showModal(false);
+    }
+
+    this.createNextWeek = function(){
+      this.showModal(true)
+    }
+  }
+
+  var model;
+
+  $(document).ready(function(){
+
+    model = new calendarViewModel();
+    ko.applyBindings(model);
+
+    model.loadWeeks();
+  })
+</script>

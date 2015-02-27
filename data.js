@@ -56,7 +56,7 @@ exports.updateField = function(field, f){
 }
 
 // -- Weeks
-var Week = mongoose.model("Week", {startDate: String, status: String});
+var Week = mongoose.model("Week", {weekNumber: Number, startDate: String, status: String});
 
 exports.getWeeks = function(res, callback) {
   Week.find({}, function(err, weeks){
