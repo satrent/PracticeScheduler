@@ -91,15 +91,17 @@ app.get('/api/weeks', function(req, res){
 
 
 app.post('/api/week', function(req, res){
+  var week = req.body.week;
+
   // validation. Check that the start date is a Monday.
-  var m = new moment(req.body.week.startDate);
+  var m = new moment(week.startDate);
 
   if (m.weekday() != 1){
     res.json({errors: ['start date must be a Monday']});
     return;
   }
 
-  data.updateWeek(req.body.week, function(result){
+  data.updateWeek(week, function(result){
     res.json(result);
   })
 })

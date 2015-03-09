@@ -24,9 +24,9 @@
 <div class="row">
   <div data-bind="text: startDate" class="col" style="width: 200px;"></div>
   <div data-bind="text: status" class="col" style="width: 80px;"></div>
-  <div class="col" style="width: 250px;">
-    <button data-bind="click: closeWeek, visible: status == open">close week</button>
-    <button data-bind="click: openWeek, visible: status == 'future'">open week</button>
+  <div class="col text-center" style="width: 250px;">
+    <button data-bind="visible: status == 'open'">close week</button>
+    <button data-bind="visible: status == 'future'">open week</button>
   </div>
 </div>
 <!-- /ko -->
@@ -57,6 +57,7 @@
     this.weeks = ko.observableArray();
     this.showModal = ko.observable(false);
     this.selectedAction = ko.observable('');
+    this.fields = [];
 
     this.selectedWeek = {
       weekNumber: ko.observable(0),
@@ -68,8 +69,8 @@
       if (this.weeks().length == 0){
         return 0;
       }
-      var maxWeek = _.max(this.weeks(), function(week){return week.weekNumber()});
-      return maxWeek.weekNumber();
+      var maxWeek = _.max(this.weeks(), function(week){return week.weekNumber});
+      return maxWeek.weekNumber;
     }
 
     this.updateMessage = ko.observable('');
@@ -90,11 +91,25 @@
       })
     }
 
+    this.loadFields = function() {
+      var self = this;
+      practice.ajax({
+        url: "/api/fields",
+        type: 'GET',
+        success: function(fields){
+          $.each(fields, function(i, field){
+            self.fields.push(field);
+          })
+        }
+      })
+    }
+
     this.updateWeek = function() {
       var week = {
         weekNumber: this.getMaxWeekNumber() + 1,
         startDate: this.selectedWeek.startDate(),
-        status: "future"
+        status: "future",
+        slots: loadSlots(this.selectedWeek.startDate())
       }
 
       practice.ajax({
@@ -119,9 +134,38 @@
     }
 
     this.createNextWeek = function(){
+      this.selectedWeek.startDate(this.calculateNextMonday());
       this.showModal(true)
     }
+
+    this.calculateNextMonday = function() {
+      if (this.weeks().length == 0){
+        // use the first Monday in April
+        var aprilFirst = new moment('4/1/2015');
+
+        while(aprilFirst.weekday() != 1){
+          aprilFirst = aprilFirst.add(1, 'day');
+        }
+
+        return aprilFirst.format("MM/DD/YYYY");
+
+      } else {
+        // use the last week, plus 7 days.
+        var maxWeek = _.max(this.weeks(), function(week){return week.weekNumber});
+        var maxStartDate = moment(maxWeek.startDate);
+        return maxStartDate.add(7, 'day').format("MM/DD/YYYY");
+      }
+    }
+
+    this.openWeek = function() {
+      console.log('open the week');
+    }
+
+    this.closeWeek = function() {
+      console.log('close week');
+    }
   }
+
 
   var model;
 
@@ -131,5 +175,51 @@
     ko.applyBindings(model);
 
     model.loadWeeks();
+    model.loadFields();
   })
+
+  var loadSlots = function(startDate) {
+    var slots = [];
+
+    var date = new moment(startDate);
+
+    slots.push({
+      date: date.format("MM/DD/YYYY"),
+      startTime: 1700,
+      endTime: 1830,
+      fieldId: model.fields[0]._id,
+      fulfilled: false
+    });
+
+    slots.push({
+      date: date.format("MM/DD/YYYY"),
+      startTime: 1830,
+      endTime: 2000,
+      fieldId: model.fields[0]._id,
+      fulfilled: false
+    });
+
+    date = date.add('day', 1);
+
+    slots.push({
+      date: date.format("MM/DD/YYYY"),
+      startTime: 1700,
+      endTime: 1830,
+      fieldId: model.fields[0]._id,
+      fulfilled: false
+    });
+
+    slots.push({
+      date: date.format("MM/DD/YYYY"),
+      startTime: 1830,
+      endTime: 2000,
+      fieldId: model.fields[0]._id,
+      fulfilled: false
+    });
+
+    return slots;
+  }
+
+
+
 </script>

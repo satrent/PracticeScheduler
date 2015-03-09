@@ -56,7 +56,10 @@ exports.updateField = function(field, f){
 }
 
 // -- Weeks
-var Week = mongoose.model("Week", {weekNumber: Number, startDate: String, status: String});
+var Slot = new mongoose.Schema({date: String, startTime: Number, endTime: Number, fieldId: mongoose.Schema.Types.ObjectId, fulfilled: Boolean});
+
+
+var Week = mongoose.model("Week", {weekNumber: Number, startDate: String, status: String, slots: [Slot]});
 
 exports.getWeeks = function(res, callback) {
   Week.find({}, function(err, weeks){
