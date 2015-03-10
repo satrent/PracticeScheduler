@@ -1,0 +1,74 @@
+<html>
+<head>
+
+  <script src="/js/underscore-min.js"></script>
+  <script src="/js/jquery-1.11.1.min.js"></script>
+  <script src="/js/moment.min.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/knockout-3.2.0.js"></script>
+  <link href="/css/site.css" rel="stylesheet" type="text/css">
+
+  <style>
+    input {
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Login</h1>
+
+  <div style="width: 220px;">
+    <div class="row">
+      <div class="col" style="width: 100px;">
+        Email:
+      </div>
+      <div class="col" style="width: 100px;">
+        <input data-bind="value: email" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col" style="width: 100px;">
+        Password:
+      </div>
+      <div class="col" style="width: 100px;">
+        <input data-bind="value: password" type="password" />
+      </div>
+    </div>
+    <button data-bind="click: login">Login</button>
+    <div data-bind="loginMessage" class="error"></div>
+  </div>
+</body>
+
+<script>
+  var loginViewModel = function(){
+    var self = this;
+
+    self.email = ko.observable('');
+    self.password = ko.observable('');
+    self.loginMessage = ko.observable('');
+
+    self.login = function(){
+      practice.ajax({
+        url: '/login',
+        type: 'POST',
+        data: JSON.stringify({email: model.email(), password: model.password()}),
+        success: function(data){
+          document.location = '/';
+        },
+        error: function(){
+          model.loginMessage('invalid login');
+        }
+      })
+    }
+  }
+
+  var model;
+
+  $(document).ready(function(e){
+    model = new loginViewModel();
+
+    ko.applyBindings(model);
+  })
+</script>
+
+</html>

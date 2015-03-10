@@ -4,6 +4,10 @@ var data = require('./data.js');
 var bodyParser = require('body-parser');
 var _ = require('./web/js/underscore-min.js');
 var moment = require('./web/js/moment.min.js');
+var jwtAuth = require('express-jwt');
+var crypto = require('crypto');
+var jwt = require('jsonwebtoken');
+var cookieParser = require('cookie-parser');
 
 app.use('/', express.static(__dirname + '/web/pages'));
 app.use('/js', express.static(__dirname + '/web/js'));
@@ -11,6 +15,31 @@ app.use('/css', express.static(__dirname + '/web/css'));
 app.use('/images', express.static(__dirname + '/web/images'));
 
 app.use( bodyParser.json() );
+app.use( cookieParser() );
+app.use('/api', jwtAuth({secret: 'fk139d0sl30sl'}));
+
+app.post('/login', function(req, res){
+  console.log(req.user);
+
+  var password = crypto.createHash('md5').update(req.body.password).digest('hex');
+
+  data.getTeamByEmailAndPassword(req.body.email, password, res, function(err, data, r){
+    if (err || !data || data.length == 0){
+      r.send(401, 'user/password not found');
+      return;
+    }
+
+    var profile = {
+      coach: data[0].coach,
+      level: data[0].level,
+      gender: data[0].gender,
+      email: data[0].email
+    }
+    var token = jwt.sign(profile, 'fk139d0sl30sl');
+    res.cookie('authToken', token, 0);
+    res.json({result: true});
+  })
+})
 
 
 var teams = [];
@@ -19,6 +48,9 @@ var requests = [];
 
 // -- Teams
 app.get('/api/teams', function (req, res) {
+
+  console.log(req.user);
+
   if (teams.length > 0){
     res.json(teams);
     return;

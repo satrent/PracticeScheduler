@@ -30,7 +30,13 @@ exports.updateRequest = function(request, f){
 
 
 // -- Teams
-var Team = mongoose.model('Team', { level: String, coach: String, gender: String });
+var Team = mongoose.model('Team', { level: String, coach: String, gender: String, email: String, password: String  });
+
+exports.getTeamByEmailAndPassword = function(email, password, res, callback){
+  Team.find({email: email, password: password}, function(err, teams){
+    callback(err, teams, res);
+  })
+}
 
 exports.getTeams = function(res, callback) {
   Team.find({}, function(err, teams) {

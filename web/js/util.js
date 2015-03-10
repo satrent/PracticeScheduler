@@ -24,3 +24,21 @@ var practice = {
   }
 
 }
+
+
+$.ajaxSetup({
+  beforeSend: function(xhr) {
+    var token;
+    var cookies = document.cookie.split(';');
+    for(var i=0; i<cookies.length; i++) {
+      var parts = cookies[i].split('=');
+      if (parts[0] == 'authToken'){
+        token = parts[1];
+      }
+    }
+
+    if (token){
+      xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+    }
+  }
+});
