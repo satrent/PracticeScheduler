@@ -11,6 +11,13 @@ var practice = {
       }
 
       return h + ':' + m + x;
+    },
+
+    queryString: function(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+      return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
   },
 
@@ -18,6 +25,14 @@ var practice = {
 
     if (!params.contentType) {
       params.contentType = 'application/json';
+    }
+
+    if (!params.error){
+      params.error = function(r, x, h){
+        if (r.status == 401){
+          window.location = "/login.html?returnUrl=" + encodeURIComponent(window.location.pathname);
+        }
+      }
     }
 
     $.ajax(params);

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Calendar Admin</title>
+  <script src="/js/moment.min.js"></script>
+  <script src="/js/underscore-min.js"></script>
+  <script src="/js/jquery-1.11.1.min.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/knockout-3.2.0.js"></script>
+
+  <link href="/css/site.css" rel="stylesheet" type="text/css">
+</head>
+<body class="teams">
+<h1>Team Admin</h1>
+<div class="row header">
+  <div class="col" style="width: 200px;">Coach</div>
+  <div class="col" style="width: 80px;">Level</div>
+  <div class="col" style="width: 80px;">Gender</div>
+  <div class="col" style="width: 150px;">Email</div>
+  <div class="col text-center" style="width: 250px;">Actions</div>
+</div>
+<!-- ko foreach: teams -->
+<div class="row">
+  <div data-bind="text: coach" class="col" style="width: 200px;"></div>
+  <div data-bind="text: level" class="col" style="width: 80px;"></div>
+  <div data-bind="text: gender" class="col" style="width: 80px;"></div>
+  <div data-bind="text: email" class="col" style="width: 150px;"></div>
+  <div class="col text-center" style="width: 100px;">
+    <button>edit</button>
+  </div>
+</div>
+<!-- /ko -->
+
+</body>
+
+<script>
+  var teamViewModel = function() {
+    var self = this;
+
+    self.teams = ko.observableArray();
+
+    self.loadTeams = function(){
+      model.teams.removeAll();
+      practice.ajax({
+        url: '/api/teams',
+        type: 'GET',
+        success: function(data){
+          $.each(data, function(i, t){
+            if (!t.email){
+              t.email = '';
+            }
+            model.teams.push(t);
+          })
+        }
+      })
+    }
+
+  }
+
+  var model;
+
+  $(document).ready(function(){
+    model = new teamViewModel();
+    ko.applyBindings(model);
+
+    model.loadTeams();
+
+  })
+
+
+</script>
+
+</html>

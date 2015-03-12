@@ -53,7 +53,12 @@
         type: 'POST',
         data: JSON.stringify({email: model.email(), password: model.password()}),
         success: function(data){
-          document.location = '/';
+
+          if (practice.utils.queryString('returnUrl')){
+            document.location = practice.utils.queryString('returnUrl');
+          } else {
+            document.location = '/';
+          }
         },
         error: function(){
           model.loginMessage('invalid login');
