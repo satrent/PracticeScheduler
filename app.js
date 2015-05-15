@@ -9,17 +9,16 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var cookieParser = require('cookie-parser');
 
-app.use('/', express.static(__dirname + '/web/pages'));
-app.use('/js', express.static(__dirname + '/web/js'));
-app.use('/css', express.static(__dirname + '/web/css'));
-app.use('/images', express.static(__dirname + '/web/images'));
+app.use('/', express.static('./web/pages'));
+app.use('/js', express.static('./web/js'));
+app.use('/css', express.static('./web/css'));
+app.use('/images', express.static('./web/images'));
 
 app.use( bodyParser.json() );
 app.use( cookieParser() );
 app.use('/api', jwtAuth({secret: 'fk139d0sl30sl'}));
 
 app.post('/login', function(req, res){
-  console.log(req.user);
 
   var password = crypto.createHash('md5').update(req.body.password).digest('hex');
 
@@ -35,7 +34,9 @@ app.post('/login', function(req, res){
       gender: data[0].gender,
       email: data[0].email
     }
+    
     var token = jwt.sign(profile, 'fk139d0sl30sl');
+
     res.cookie('authToken', token, 0);
     res.json({result: true});
   })
@@ -48,8 +49,6 @@ var requests = [];
 
 // -- Teams
 app.get('/api/teams', function (req, res) {
-
-  console.log(req.user);
 
   if (teams.length > 0){
     res.json(teams);
@@ -139,7 +138,6 @@ app.post('/api/week', function(req, res){
 })
 
 // - Start Server
-var server = app.listen(8895, function () {
-  var port = server.address().port
-  console.log('app listening on %s', port)
+var server = app.listen(process.env.PORT, process.env.IP, function () {
+  console.log('app listening %s', process.env.PORT)
 })
